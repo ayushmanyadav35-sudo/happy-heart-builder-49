@@ -20,6 +20,7 @@ import { Route as AuthenticatedSetupProfileRouteImport } from './routes/_authent
 import { Route as AuthenticatedSubjectsIndexRouteImport } from './routes/_authenticated.subjects.index'
 import { Route as AuthenticatedSubjectsSubjectIdRouteImport } from './routes/_authenticated.subjects.$subjectId'
 import { Route as AuthenticatedTestsIndexRouteImport } from './routes/_authenticated.tests.index'
+import { Route as AuthenticatedTestsTestIdRouteImport } from './routes/_authenticated.tests.$testId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -78,6 +79,12 @@ const AuthenticatedTestsIndexRoute = AuthenticatedTestsIndexRouteImport.update({
   path: '/tests/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedTestsTestIdRoute =
+  AuthenticatedTestsTestIdRouteImport.update({
+    id: '/tests/$testId',
+    path: '/tests/$testId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof AuthenticatedHomeRoute
   '/setup-profile': typeof AuthenticatedSetupProfileRoute
   '/subjects/$subjectId': typeof AuthenticatedSubjectsSubjectIdRoute
+  '/tests/$testId': typeof AuthenticatedTestsTestIdRoute
   '/subjects/': typeof AuthenticatedSubjectsIndexRoute
   '/tests/': typeof AuthenticatedTestsIndexRoute
 }
@@ -100,6 +108,7 @@ export interface FileRoutesByTo {
   '/home': typeof AuthenticatedHomeRoute
   '/setup-profile': typeof AuthenticatedSetupProfileRoute
   '/subjects/$subjectId': typeof AuthenticatedSubjectsSubjectIdRoute
+  '/tests/$testId': typeof AuthenticatedTestsTestIdRoute
   '/subjects': typeof AuthenticatedSubjectsIndexRoute
   '/tests': typeof AuthenticatedTestsIndexRoute
 }
@@ -114,6 +123,7 @@ export interface FileRoutesById {
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/setup-profile': typeof AuthenticatedSetupProfileRoute
   '/_authenticated/subjects/$subjectId': typeof AuthenticatedSubjectsSubjectIdRoute
+  '/_authenticated/tests/$testId': typeof AuthenticatedTestsTestIdRoute
   '/_authenticated/subjects/': typeof AuthenticatedSubjectsIndexRoute
   '/_authenticated/tests/': typeof AuthenticatedTestsIndexRoute
 }
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/setup-profile'
     | '/subjects/$subjectId'
+    | '/tests/$testId'
     | '/subjects/'
     | '/tests/'
   fileRoutesByTo: FileRoutesByTo
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/setup-profile'
     | '/subjects/$subjectId'
+    | '/tests/$testId'
     | '/subjects'
     | '/tests'
   id:
@@ -153,6 +165,7 @@ export interface FileRouteTypes {
     | '/_authenticated/home'
     | '/_authenticated/setup-profile'
     | '/_authenticated/subjects/$subjectId'
+    | '/_authenticated/tests/$testId'
     | '/_authenticated/subjects/'
     | '/_authenticated/tests/'
   fileRoutesById: FileRoutesById
@@ -245,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTestsIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/tests/$testId': {
+      id: '/_authenticated/tests/$testId'
+      path: '/tests/$testId'
+      fullPath: '/tests/$testId'
+      preLoaderRoute: typeof AuthenticatedTestsTestIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
@@ -252,6 +272,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedSetupProfileRoute: typeof AuthenticatedSetupProfileRoute
   AuthenticatedSubjectsSubjectIdRoute: typeof AuthenticatedSubjectsSubjectIdRoute
+  AuthenticatedTestsTestIdRoute: typeof AuthenticatedTestsTestIdRoute
   AuthenticatedSubjectsIndexRoute: typeof AuthenticatedSubjectsIndexRoute
   AuthenticatedTestsIndexRoute: typeof AuthenticatedTestsIndexRoute
 }
@@ -260,6 +281,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedSetupProfileRoute: AuthenticatedSetupProfileRoute,
   AuthenticatedSubjectsSubjectIdRoute: AuthenticatedSubjectsSubjectIdRoute,
+  AuthenticatedTestsTestIdRoute: AuthenticatedTestsTestIdRoute,
   AuthenticatedSubjectsIndexRoute: AuthenticatedSubjectsIndexRoute,
   AuthenticatedTestsIndexRoute: AuthenticatedTestsIndexRoute,
 }
