@@ -15,8 +15,10 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated.home'
 import { Route as AuthenticatedSetupProfileRouteImport } from './routes/_authenticated.setup-profile'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated.admin.index'
 import { Route as AuthenticatedSubjectsIndexRouteImport } from './routes/_authenticated.subjects.index'
 import { Route as AuthenticatedSubjectsSubjectIdRouteImport } from './routes/_authenticated.subjects.$subjectId'
 import { Route as AuthenticatedTestsIndexRouteImport } from './routes/_authenticated.tests.index'
@@ -51,6 +53,11 @@ const SignupRoute = SignupRouteImport.update({
   path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
   id: '/home',
   path: '/home',
@@ -62,6 +69,11 @@ const AuthenticatedSetupProfileRoute =
     path: '/setup-profile',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedSubjectsIndexRoute =
   AuthenticatedSubjectsIndexRouteImport.update({
     id: '/subjects/',
@@ -92,10 +104,12 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/signup': typeof SignupRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/home': typeof AuthenticatedHomeRoute
   '/setup-profile': typeof AuthenticatedSetupProfileRoute
   '/subjects/$subjectId': typeof AuthenticatedSubjectsSubjectIdRoute
   '/tests/$testId': typeof AuthenticatedTestsTestIdRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/subjects/': typeof AuthenticatedSubjectsIndexRoute
   '/tests/': typeof AuthenticatedTestsIndexRoute
 }
@@ -109,6 +123,7 @@ export interface FileRoutesByTo {
   '/setup-profile': typeof AuthenticatedSetupProfileRoute
   '/subjects/$subjectId': typeof AuthenticatedSubjectsSubjectIdRoute
   '/tests/$testId': typeof AuthenticatedTestsTestIdRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/subjects': typeof AuthenticatedSubjectsIndexRoute
   '/tests': typeof AuthenticatedTestsIndexRoute
 }
@@ -120,10 +135,12 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/signup': typeof SignupRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/setup-profile': typeof AuthenticatedSetupProfileRoute
   '/_authenticated/subjects/$subjectId': typeof AuthenticatedSubjectsSubjectIdRoute
   '/_authenticated/tests/$testId': typeof AuthenticatedTestsTestIdRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/subjects/': typeof AuthenticatedSubjectsIndexRoute
   '/_authenticated/tests/': typeof AuthenticatedTestsIndexRoute
 }
@@ -135,10 +152,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/signup'
+    | '/admin'
     | '/home'
     | '/setup-profile'
     | '/subjects/$subjectId'
     | '/tests/$testId'
+    | '/admin/'
     | '/subjects/'
     | '/tests/'
   fileRoutesByTo: FileRoutesByTo
@@ -152,6 +171,7 @@ export interface FileRouteTypes {
     | '/setup-profile'
     | '/subjects/$subjectId'
     | '/tests/$testId'
+    | '/admin'
     | '/subjects'
     | '/tests'
   id:
@@ -162,10 +182,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/signup'
+    | '/_authenticated/admin'
     | '/_authenticated/home'
     | '/_authenticated/setup-profile'
     | '/_authenticated/subjects/$subjectId'
     | '/_authenticated/tests/$testId'
+    | '/_authenticated/admin/'
     | '/_authenticated/subjects/'
     | '/_authenticated/tests/'
   fileRoutesById: FileRoutesById
@@ -223,6 +245,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/home': {
       id: '/_authenticated/home'
       path: '/home'
@@ -236,6 +265,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/setup-profile'
       preLoaderRoute: typeof AuthenticatedSetupProfileRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/subjects/': {
       id: '/_authenticated/subjects/'
@@ -268,7 +304,19 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedSetupProfileRoute: typeof AuthenticatedSetupProfileRoute
   AuthenticatedSubjectsSubjectIdRoute: typeof AuthenticatedSubjectsSubjectIdRoute
@@ -278,6 +326,7 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedSetupProfileRoute: AuthenticatedSetupProfileRoute,
   AuthenticatedSubjectsSubjectIdRoute: AuthenticatedSubjectsSubjectIdRoute,
