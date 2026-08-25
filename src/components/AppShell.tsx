@@ -64,9 +64,9 @@ export function PageHeader({
   right,
 }: {
   title: string;
-  subtitle?: string;
-  back?: string;
-  right?: ReactNode;
+  subtitle?: string | undefined;
+  back?: string | undefined;
+  right?: ReactNode | undefined;
 }) {
   return (
     <header className="mb-4 flex items-start gap-3">
