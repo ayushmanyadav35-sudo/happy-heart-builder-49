@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
+import { withData } from "@/lib/server-fn";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -107,7 +108,7 @@ function SubjectsTab() {
   });
 
   const mutation = useMutation({
-    mutationFn: createSubjectFn,
+    mutationFn: withData(createSubjectFn),
     onSuccess: () => {
       toast.success("Subject created");
       setForm({ code: "", name: "", university: UNIVERSITIES[0]!, branch: "", semester: "" });
@@ -264,7 +265,7 @@ function UnitsTab() {
   });
 
   const unitMutation = useMutation({
-    mutationFn: createUnitFn,
+    mutationFn: withData(createUnitFn),
     onSuccess: () => {
       toast.success("Unit created");
       setUnitForm({ number: "", title: "" });
@@ -274,7 +275,7 @@ function UnitsTab() {
   });
 
   const topicMutation = useMutation({
-    mutationFn: createTopicFn,
+    mutationFn: withData(createTopicFn),
     onSuccess: () => {
       toast.success("Topic created");
       setTopicForm({ title: "", priority: "medium", unitId: "" });
@@ -466,7 +467,7 @@ function NotesTab() {
   });
 
   const mutation = useMutation({
-    mutationFn: createNoteFn,
+    mutationFn: withData(createNoteFn),
     onSuccess: () => {
       toast.success("Note created");
       setTitle("");
@@ -644,7 +645,7 @@ function PyqsTab() {
   });
 
   const mutation = useMutation({
-    mutationFn: createPyqFn,
+    mutationFn: withData(createPyqFn),
     onSuccess: () => {
       toast.success("PYQ added");
       setQuestion("");
@@ -802,7 +803,7 @@ function TestsTab() {
   });
 
   const testMutation = useMutation({
-    mutationFn: createTestFn,
+    mutationFn: withData(createTestFn),
     onSuccess: () => {
       toast.success("Test created");
       setTestForm({ title: "", duration: "15", difficulty: "medium" });
@@ -812,7 +813,7 @@ function TestsTab() {
   });
 
   const questionMutation = useMutation({
-    mutationFn: createQuestionFn,
+    mutationFn: withData(createQuestionFn),
     onSuccess: () => {
       toast.success("Question added");
       setQuestion({ text: "", options: ["", ""], correctIndex: 0, explanation: "" });

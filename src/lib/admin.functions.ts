@@ -1,9 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 
 async function requireAdmin(context: {
-  supabase: { rpc: (...args: unknown[]) => Promise<{ data: boolean | null; error: Error | null }> };
+  supabase: SupabaseClient<Database>;
   userId: string;
 }) {
   const { data: isAdmin, error } = await context.supabase.rpc("has_role", {
@@ -30,7 +31,7 @@ export const createSubject = createServerFn({ method: "POST" })
       university: string;
       branch: string;
       semester: number;
-      icon?: string;
+      icon?: string | undefined;
     }) => input,
   )
   .handler(async ({ data, context }) => {
@@ -41,7 +42,7 @@ export const createSubject = createServerFn({ method: "POST" })
       university: data.university,
       branch: data.branch,
       semester: data.semester,
-      icon: data.icon,
+      icon: data.icon ?? null,
     });
     if (error) throw error;
     return { ok: true };
@@ -68,10 +69,10 @@ export const createTopic = createServerFn({ method: "POST" })
   .inputValidator(
     (input: {
       subject_id: string;
-      unit_id?: string;
+      unit_id?: string | undefined;
       title: string;
-      priority?: string;
-      exam_categories?: string[];
+      priority?: string | undefined;
+      exam_categories?: string[] | undefined;
     }) => input,
   )
   .handler(async ({ data, context }) => {
@@ -92,12 +93,12 @@ export const createNote = createServerFn({ method: "POST" })
   .inputValidator(
     (input: {
       subject_id: string;
-      unit_id?: string;
-      topic_id?: string;
+      unit_id?: string | undefined;
+      topic_id?: string | undefined;
       title: string;
       note_type: string;
-      file_url?: string;
-      is_premium?: boolean;
+      file_url?: string | undefined;
+      is_premium?: boolean | undefined;
     }) => input,
   )
   .handler(async ({ data, context }) => {
@@ -120,16 +121,16 @@ export const createPyq = createServerFn({ method: "POST" })
   .inputValidator(
     (input: {
       subject_id: string;
-      unit_id?: string;
-      topic_id?: string;
+      unit_id?: string | undefined;
+      topic_id?: string | undefined;
       question: string;
-      marks?: number;
-      exam_type?: string;
-      question_type?: string;
-      years?: number[];
-      frequency?: number;
-      model_answer?: string;
-      is_premium?: boolean;
+      marks?: number | undefined;
+      exam_type?: string | undefined;
+      question_type?: string | undefined;
+      years?: number[] | undefined;
+      frequency?: number | undefined;
+      model_answer?: string | undefined;
+      is_premium?: boolean | undefined;
     }) => input,
   )
   .handler(async ({ data, context }) => {
@@ -156,13 +157,13 @@ export const createTest = createServerFn({ method: "POST" })
   .inputValidator(
     (input: {
       subject_id: string;
-      unit_id?: string;
-      topic_id?: string;
+      unit_id?: string | undefined;
+      topic_id?: string | undefined;
       title: string;
-      test_type?: string;
-      duration_minutes?: number;
-      difficulty?: string;
-      is_premium?: boolean;
+      test_type?: string | undefined;
+      duration_minutes?: number | undefined;
+      difficulty?: string | undefined;
+      is_premium?: boolean | undefined;
     }) => input,
   )
   .handler(async ({ data, context }) => {
@@ -186,12 +187,12 @@ export const createTestQuestion = createServerFn({ method: "POST" })
   .inputValidator(
     (input: {
       test_id: string;
-      topic_id?: string;
+      topic_id?: string | undefined;
       question: string;
       options: string[];
       correct_index: number;
-      explanation?: string;
-      position?: number;
+      explanation?: string | undefined;
+      position?: number | undefined;
     }) => input,
   )
   .handler(async ({ data, context }) => {
