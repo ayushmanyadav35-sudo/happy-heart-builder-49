@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { withData } from "@/lib/server-fn";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -13,6 +13,7 @@ import {
   Upload,
   ClipboardList,
   Trash2,
+  Users,
 } from "lucide-react";
 import {
   createSubject,
@@ -60,6 +61,14 @@ function AdminDashboard() {
   return (
     <AppPage>
       <PageHeader title="Admin" subtitle="Manage content for BtechBuddy" />
+
+      <Button asChild variant="outline" className="mb-4 w-full rounded-xl">
+        <Link to="/admin/users">
+          <Users className="size-4" /> Users &amp; roles
+        </Link>
+      </Button>
+
+
 
       <Tabs defaultValue="subjects" className="space-y-4">
         <TabsList className="grid w-full grid-cols-5 rounded-xl">
