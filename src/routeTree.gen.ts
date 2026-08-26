@@ -21,8 +21,10 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedRevisionRouteImport } from './routes/_authenticated.revision'
 import { Route as AuthenticatedSetupProfileRouteImport } from './routes/_authenticated.setup-profile'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated.admin.index'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated.admin.users'
 import { Route as AuthenticatedSubjectsIndexRouteImport } from './routes/_authenticated.subjects.index'
 import { Route as AuthenticatedSubjectsSubjectIdRouteImport } from './routes/_authenticated.subjects.$subjectId'
+import { Route as AuthenticatedSubjectsBrowseRouteImport } from './routes/_authenticated.subjects.browse'
 import { Route as AuthenticatedTestsIndexRouteImport } from './routes/_authenticated.tests.index'
 import { Route as AuthenticatedTestsTestIdRouteImport } from './routes/_authenticated.tests.$testId'
 
@@ -86,6 +88,11 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedSubjectsIndexRoute =
   AuthenticatedSubjectsIndexRouteImport.update({
     id: '/subjects/',
@@ -96,6 +103,12 @@ const AuthenticatedSubjectsSubjectIdRoute =
   AuthenticatedSubjectsSubjectIdRouteImport.update({
     id: '/subjects/$subjectId',
     path: '/subjects/$subjectId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedSubjectsBrowseRoute =
+  AuthenticatedSubjectsBrowseRouteImport.update({
+    id: '/subjects/browse',
+    path: '/subjects/browse',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedTestsIndexRoute = AuthenticatedTestsIndexRouteImport.update({
@@ -121,7 +134,9 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/revision': typeof AuthenticatedRevisionRoute
   '/setup-profile': typeof AuthenticatedSetupProfileRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/subjects/$subjectId': typeof AuthenticatedSubjectsSubjectIdRoute
+  '/subjects/browse': typeof AuthenticatedSubjectsBrowseRoute
   '/tests/$testId': typeof AuthenticatedTestsTestIdRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/subjects/': typeof AuthenticatedSubjectsIndexRoute
@@ -137,7 +152,9 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/revision': typeof AuthenticatedRevisionRoute
   '/setup-profile': typeof AuthenticatedSetupProfileRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/subjects/$subjectId': typeof AuthenticatedSubjectsSubjectIdRoute
+  '/subjects/browse': typeof AuthenticatedSubjectsBrowseRoute
   '/tests/$testId': typeof AuthenticatedTestsTestIdRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/subjects': typeof AuthenticatedSubjectsIndexRoute
@@ -156,7 +173,9 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/revision': typeof AuthenticatedRevisionRoute
   '/_authenticated/setup-profile': typeof AuthenticatedSetupProfileRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/subjects/$subjectId': typeof AuthenticatedSubjectsSubjectIdRoute
+  '/_authenticated/subjects/browse': typeof AuthenticatedSubjectsBrowseRoute
   '/_authenticated/tests/$testId': typeof AuthenticatedTestsTestIdRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/subjects/': typeof AuthenticatedSubjectsIndexRoute
@@ -175,7 +194,9 @@ export interface FileRouteTypes {
     | '/profile'
     | '/revision'
     | '/setup-profile'
+    | '/admin/users'
     | '/subjects/$subjectId'
+    | '/subjects/browse'
     | '/tests/$testId'
     | '/admin/'
     | '/subjects/'
@@ -191,7 +212,9 @@ export interface FileRouteTypes {
     | '/profile'
     | '/revision'
     | '/setup-profile'
+    | '/admin/users'
     | '/subjects/$subjectId'
+    | '/subjects/browse'
     | '/tests/$testId'
     | '/admin'
     | '/subjects'
@@ -209,7 +232,9 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/revision'
     | '/_authenticated/setup-profile'
+    | '/_authenticated/admin/users'
     | '/_authenticated/subjects/$subjectId'
+    | '/_authenticated/subjects/browse'
     | '/_authenticated/tests/$testId'
     | '/_authenticated/admin/'
     | '/_authenticated/subjects/'
@@ -311,6 +336,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/subjects/': {
       id: '/_authenticated/subjects/'
       path: '/subjects'
@@ -323,6 +355,13 @@ declare module '@tanstack/react-router' {
       path: '/subjects/$subjectId'
       fullPath: '/subjects/$subjectId'
       preLoaderRoute: typeof AuthenticatedSubjectsSubjectIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/subjects/browse': {
+      id: '/_authenticated/subjects/browse'
+      path: '/subjects/browse'
+      fullPath: '/subjects/browse'
+      preLoaderRoute: typeof AuthenticatedSubjectsBrowseRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/tests/': {
@@ -343,10 +382,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
@@ -360,6 +401,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedRevisionRoute: typeof AuthenticatedRevisionRoute
   AuthenticatedSetupProfileRoute: typeof AuthenticatedSetupProfileRoute
   AuthenticatedSubjectsSubjectIdRoute: typeof AuthenticatedSubjectsSubjectIdRoute
+  AuthenticatedSubjectsBrowseRoute: typeof AuthenticatedSubjectsBrowseRoute
   AuthenticatedTestsTestIdRoute: typeof AuthenticatedTestsTestIdRoute
   AuthenticatedSubjectsIndexRoute: typeof AuthenticatedSubjectsIndexRoute
   AuthenticatedTestsIndexRoute: typeof AuthenticatedTestsIndexRoute
@@ -372,6 +414,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedRevisionRoute: AuthenticatedRevisionRoute,
   AuthenticatedSetupProfileRoute: AuthenticatedSetupProfileRoute,
   AuthenticatedSubjectsSubjectIdRoute: AuthenticatedSubjectsSubjectIdRoute,
+  AuthenticatedSubjectsBrowseRoute: AuthenticatedSubjectsBrowseRoute,
   AuthenticatedTestsTestIdRoute: AuthenticatedTestsTestIdRoute,
   AuthenticatedSubjectsIndexRoute: AuthenticatedSubjectsIndexRoute,
   AuthenticatedTestsIndexRoute: AuthenticatedTestsIndexRoute,
