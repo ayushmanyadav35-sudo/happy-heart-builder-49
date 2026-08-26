@@ -29,20 +29,19 @@ function ProfilePage() {
   const { data: user } = useAuthUser();
   const { data: profile } = useProfile();
 
-  const { data: isAdmin = false } = useQuery({
-    queryKey: ["is-admin", user?.id],
+  const { data: roles = [] } = useQuery({
+    queryKey: ["my-roles", user?.id],
     enabled: Boolean(user?.id),
     queryFn: async () => {
       const { data, error } = await supabase
         .from("user_roles")
         .select("role")
-        .eq("user_id", user!.id)
-        .eq("role", "admin")
-        .maybeSingle();
+        .eq("user_id", user!.id);
       if (error) throw error;
-      return Boolean(data);
+      return (data ?? []).map((r) => r.role);
     },
   });
+  const isAdmin = roles.includes("admin");
 
   async function signOut() {
     const { error } = await supabase.auth.signOut();
@@ -80,6 +79,12 @@ function ProfilePage() {
             <dt className="text-muted-foreground">Plan</dt>
             <dd className="font-medium">{profile?.is_premium ? "Premium" : "Free"}</dd>
           </div>
+          <div className="flex justify-between">
+            <dt className="text-muted-foreground">Roles</dt>
+            <dd className="font-medium capitalize">
+              {roles.length > 0 ? roles.join(", ") : "Student"}
+            </dd>
+          </div>
         </dl>
         <Button asChild variant="outline" className="mt-4 w-full">
           <Link to="/setup-profile">
@@ -92,12 +97,15 @@ function ProfilePage() {
         <section className="mt-4 rounded-2xl border border-border bg-card p-4">
           <h2 className="font-heading text-base font-semibold text-foreground">Admin</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Add subjects, units, notes, PYQs and tests.
+            Manage syllabus content, and review users and their roles.
           </p>
           <Button asChild className="mt-3 w-full">
             <Link to="/admin">
               <Shield className="size-4" /> Open admin panel
             </Link>
+          </Button>
+          <Button asChild variant="outline" className="mt-2 w-full">
+            <Link to="/admin/users">Users &amp; roles</Link>
           </Button>
         </section>
       )}

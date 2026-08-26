@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { BookOpen, Plus, Check } from "lucide-react";
+import { BookOpen, Plus, Check, Compass } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AppPage, EmptyState, PageHeader } from "@/components/AppShell";
@@ -70,6 +70,14 @@ function SubjectsPage() {
   return (
     <AppPage>
       <PageHeader title="My Subjects" subtitle="Semester syllabus and readiness" />
+
+      <Button asChild variant="outline" className="mb-4 w-full rounded-xl">
+        <Link to="/subjects/browse">
+          <Compass className="size-4" /> Browse all branches &amp; semesters
+        </Link>
+      </Button>
+
+
 
       {mine.length === 0 ? (
         <EmptyState
